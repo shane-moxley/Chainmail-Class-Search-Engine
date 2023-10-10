@@ -4,7 +4,7 @@ api = Blueprint('api', __name__)
 
 @api.route('/hello', methods=['GET'])
 def hello_world():
-    return 'Hello World'
+    return "String"
 
 @api.route('/', methods=['GET'])
 def index():
