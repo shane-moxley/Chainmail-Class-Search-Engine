@@ -1,0 +1,12 @@
+{
+    "name": "my-three-page-website",
+    "version": "1.0.0",
+    "description": "A three-page website project",
+    "scripts": {
+      "start": "concurrently \"npm start\" \"cd backend && python app.py\""
+    },
+    "dependencies": {
+      "concurrently": "^6.0.0"
+    }
+  }
+  
