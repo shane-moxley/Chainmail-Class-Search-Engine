@@ -1,11 +1,11 @@
-from flask import Blueprint, render_template
+from flask import Flask, request, jsonify
 
-api = Blueprint('api', __name__)
+app = Flask(__name)
 
-@api.route('/hello', methods=['GET'])
-def hello_world():
-    return "String"
+@app.route('/api/submit', methods=['POST'])
+def submit_data():
+    data = request.json
+    # Process the data as needed (e.g., save it to a database)
+    return jsonify({'message': 'Data received successfully'})
 
-@api.route('/', methods=['GET'])
-def index():
-    return render_template('index.html')
+
