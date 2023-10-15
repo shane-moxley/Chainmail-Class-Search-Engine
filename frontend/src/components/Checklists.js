@@ -2,6 +2,10 @@ import React, { useState } from 'react';
 import { Checkbox, PrimaryButton } from '@fluentui/react';
 
 const Checklists = ({ onNext }) => {
+  const list1 = ["MATH221"]
+  const list2 = ["CMSC201"]
+  const list3 = ["STAT355"]
+  const list4 = ["PHYS121"]
   const [selectedCheckboxes, setSelectedCheckboxes] = useState({
     list1: [],
     list2: [],

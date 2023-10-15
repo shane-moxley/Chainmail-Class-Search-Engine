@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import Welcome from './Welcome';
-import Checklists from './Checklists';
-import Search from './Search';
+import Welcome from './components/Welcome';
+import Checklists from './components/Checklists';
+import Search from './components/Search';
 
 const App = () => {
   const [page, setPage] = useState(1);
