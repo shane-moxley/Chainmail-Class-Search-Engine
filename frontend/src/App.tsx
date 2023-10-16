@@ -1,34 +1,31 @@
-import React from 'react';
+import React, { useState } from 'react';
+import Welcome from './components/Welcome';
+import Select from './components/Select';
+import Search from './components/Search';
 
 function App() {
+  const [page, setPage] = useState(1);
+  const [selectedMajor, setSelectedMajor] = useState(null);
+  const [selectedYear, setSelectedYear] = useState(null);
+
+  const nextPage = () => {
+    setPage(page + 1);
+  };
+
   return (
-    <div className="w-full h-screen flex flex-cols text-center">
-        <div className="w-1/8 bg-slate-200 h-full p-4 hidden md:flex flex-col">
-          <div className="px-4">
-            <p>Project Chainmail</p>
-          </div>
-          <div className="justify-stretch py-5 grid grid-cols-1 gap-3 my-auto">
-            <div className="bg-slate-100 shadow-md rounded-md px-4 py-3">
-              Step 1
-            </div>
-            <div className="bg-slate-100 shadow-md rounded-md px-4 py-3">
-              Step 2
-            </div>
-            <div className="bg-slate-100 shadow-md rounded-md px-4 py-3">
-              Results
-            </div>
-          </div>
-          <div>
-            FOOTER
-          </div>
-        </div>
-        <div className="grid grid-cols-1 gap-3 w-1/2 mx-auto h-1/2">
-          <div className="text-4xl pt-10" >Welcome</div>
-          <div className="block">
-          <button className="bg-slate-100 shadow-md px-4 py-3"> Get started</button></div>
-        </div>
-     </div>
-  );  
+    <div>
+      {page === 1 && (
+        <Welcome
+          //onNext={nextPage}
+          //setSelectedMajor={setSelectedMajor}
+          //setSelectedYear={setSelectedYear}
+        />
+      )}
+      {page === 2 && <Select/>}
+      {page === 3 && <Search/>}
+    </div>
+  );
+
 }
 
 export default App;
