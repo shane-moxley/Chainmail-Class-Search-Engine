@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
-import { TextField, PrimaryButton } from '@fluentui/react';
+//import { TextField, PrimaryButton } from '@fluentui/react';
 
-type SearchProps = {
-  onNext: () => void;
-};
 
-const Search: React.FC<SearchProps> = ({ onNext }) => {
+
+const Search = () => {
   const [searchText, setSearchText] = useState<string>(''); // Initialize searchText as an empty string
 
   const handleNext = () => {
@@ -15,18 +13,13 @@ const Search: React.FC<SearchProps> = ({ onNext }) => {
       //   console.log(response.data.message);
       //   onNext();
       // });
-      onNext();
+      //onNext();
     }
   };
 
   return (
     <div>
-      <TextField
-        label="Enter Search Text"
-        value={searchText}
-        onChange={(e, newValue) => setSearchText(newValue || '')} // Ensure newValue is not null
-      />
-      <PrimaryButton text="Next" onClick={handleNext} />
+      <h1>Search</h1>
     </div>
   );
 };

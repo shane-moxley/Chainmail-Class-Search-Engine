@@ -3,27 +3,61 @@ import Welcome from './components/Welcome';
 import Select from './components/Select';
 import Search from './components/Search';
 
-function App() {
-  const [page, setPage] = useState(1);
-  const [selectedMajor, setSelectedMajor] = useState<string | null>(null);
-  const [selectedYear, setSelectedYear] = useState<string | null>(null);
+import Layout from './components/Layout';
+import Sidebar from './components/Sidebar';
+import Navigation from './components/Navigation';
 
-  const nextPage = () => {
-    setPage(page + 1);
-  };
+import '@mantine/core/styles.css';
+import { MantineProvider, createTheme} from '@mantine/core';
+
+
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+
+
+// Might use this later for navigation (Put it inside <Router>)
+/*
+<nav>
+  <ul>
+    <li>
+      <Link to="/">Welcome</Link>
+    </li>
+    <li>
+      <Link to="select">Select</Link>
+    </li>
+  </ul>
+</nav>
+*/
+
+const theme = createTheme({
+  /** Your theme override here */
+});
+
+function App() {
 
   return (
-    <div>
-      {page === 1 && (
-        <Welcome
-          onNext={nextPage}
-          setSelectedMajor={setSelectedMajor}
-          setSelectedYear={setSelectedYear}
-        />
-      )}
-      {page === 2 && <Select onNext={nextPage} />}
-      {page === 3 && <Search onNext={nextPage} />}
-    </div>
+    <MantineProvider defaultColorScheme="dark" theme={theme}>
+      <Router>
+        <Layout>
+
+          <div className='bg-indigo-500 md:grow content-center'>
+            <Sidebar/>
+          </div>
+
+          <div className='flex grow md:w-3/5'>
+            <Routes>
+              <Route path="/" element={<Welcome />} />
+              <Route path="select" element={<Select />} />
+              <Route path="search" element={<Search />} />
+            </Routes>
+          </div>
+
+
+
+
+
+        </Layout>
+      </Router>
+    </MantineProvider>
   );
 }
 
