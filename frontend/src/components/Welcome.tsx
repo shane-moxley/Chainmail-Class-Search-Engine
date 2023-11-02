@@ -1,60 +1,61 @@
 import React, { useState } from 'react';
 import { Select, Button, MantineProvider, Container } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
-
-
-type WelcomeProps = {
-  setSelectedMajor: (major: string | null) => void;
-  setSelectedYear: (year: string | null) => void;
-};
-
-
-
+import axios from 'axios'; // Import Axios library for making HTTP requests
 
 const Welcome = () => {
-
   const navigate = useNavigate();
-  const routeChange = () =>{ 
-    let path = `select`; 
-    navigate(path);
-  }
+  const [selectedMajor, setSelectedMajor] = useState<string | null>(null);
+  const [selectedYear, setSelectedYear] = useState<string | null>(null);
 
-  //const history = useHistory();
-  const [dropdown1Value, setDropdown1Value] = useState<string | null>(null);
-  const [dropdown2Value, setDropdown2Value] = useState<string | null>(null);
+  const routeChange = () => {
+    if (selectedMajor && selectedYear) {
+      // // Make an API call to "/getCourseList" with selectedMajor and selectedYear
+      // axios
+      //   .get('/getCourseList', {
+      //     params: {
+      //       Major: selectedMajor,
+      //       Year: selectedYear,
+      //     },
+      //   })
+      //   .then((response) => {
+      //     // Handle the API response here, e.g., navigate to the next page
+      //     // or process the data returned from the API
+      //     navigate('/select'); // Navigate to the next page
+      //   })
+      //   .catch((error) => {
+      //     // Handle API call errors here
+      //     console.error('API call failed:', error);
+      //   });
 
-
-
+      navigate('/select'); // Navigate to the next page (remove when api implemented)
+    }
+  };
 
   return (
+    <Container className='space-y-8 grow flex flex-col justify-center'>
+      <h1>Welcome, Student</h1>
 
-      <Container className='space-y-8 grow flex flex-col justify-center'>
-        <h1>Welcome, Student</h1>
+      <p> We introduce to you the UMBC Chainmail College Assistant! (Your introductory text here)</p>
 
-        <p> We introduce to you the UMBC Chainmail College Assistant!<br/><br/>
-            This tool helps college newbies <strong className='text-violet-600'>save their grades</strong> and <strong className='text-violet-600'>get their lives straight</strong>.
-            UMBC Chainmail uses state-of-the-art Big Data analysis, Machine Learning, RateMyProf rant posts, and real-time AccuWeather data to spin you up the perfect college schedule.
-            
-            <br/>
-            You don't want your parents money to go down the gutter? Use UMBC Chainmail.
-        </p>
-        
-        <Select
-          label="Select your Major"
-          placeholder="Pick Major"
-          data={['Computer Science', 'Computer Engineering', 'Mathematics', 'Economics']}
-        />
+      <Select
+        label="Select your Major"
+        placeholder="Pick Major"
+        data={['Computer Science', 'Computer Engineering', 'Mathematics', 'Economics']}
+        onChange={(value) => setSelectedMajor(value)} // Update selectedMajor when a major is selected
+      />
 
-        <Select
-          label="Select your Year"
-          placeholder="Pick Year"
-          data={['Freshman', 'Sophomore', 'Junior', 'Senior (and up)']}
-        />
+      <Select
+        label="Select your Year"
+        placeholder="Pick Year"
+        data={['Freshman', 'Sophomore', 'Junior', 'Senior (and up)']}
+        onChange={(value) => setSelectedYear(value)} // Update selectedYear when a year is selected
+      />
 
-
-        <Button fullWidth onClick={routeChange} className='absolute inset-x-0 bottom-0'>Next</Button>
-      </Container>
-
+      <Button fullWidth onClick={routeChange} className='absolute inset-x-0 bottom-0'>
+        Next
+      </Button>
+    </Container>
   );
 };
 
