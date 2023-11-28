@@ -3,12 +3,7 @@ import pyodbc
 
 api = Blueprint('api', __name__)
 
-cnxn_str = ("Driver={SQL Server Native Client 11.0};"
-            "Server=LAPTOP-RMMJ6U05;"
-            "Database=ChainmailClassSearchEngine;"
-            "Trusted_Connection=yes;")
-cnxn = pyodbc.connect(cnxn_str)
-
+cnxn = pyodbc.connect('DRIVER={SQL Server}; SERVER=LAPTOP-RMMJ6U05; Database=ChainmailClassesDatabase; TRUSTED_CONNECTION=yes')
 
 @api.route('/api/getRequirements', methods=['POST'])
 def get_requirements(major):
