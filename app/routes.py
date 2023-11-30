@@ -26,7 +26,7 @@ def get_requirements(major):
     return jsonify(requirements[major])
 
 @api.route('/api/getRecommendations', methods=['POST'])
-def get_recommendations(completed_courses):
+def get_recommendations(COMPLETED_COURSES):
     df = pd.read_csv('class_data.csv')
     recs = []
 
