@@ -1,13 +1,15 @@
 from flask import Blueprint, request, jsonify
-import pyodbc
+import pandas as pd
+
+COURSE_TYPES = ['CMSC', 'CMPE', 'ENGL', 'IS', 'MATH', 'STAT']
+COURSE_NUMS = ['150', '151', '152', '155', '201', '201H', '151H', '152H', '140', '100', '202', '202H', '210', '203', '212', '310', '341', '313', '331', '221', '341H', '435', '142', '421', '481', '345', '447', '471']
+
 
 api = Blueprint('api', __name__)
 
-cnxn = pyodbc.connect('DRIVER={SQL Server}; SERVER=LAPTOP-RMMJ6U05; Database=ChainmailClassesDatabase; TRUSTED_CONNECTION=yes')
-
 @api.route('/api/getRequirements', methods=['POST'])
 def get_requirements(major):
-    data = request.json
+    #data = request.json
     requirements = {'CMPE' : {'Required Core Classes' : {'ENGL 100', 'ENES 101', 'CHEM 101', 'PHYS 121', 'PHYS 122', 'BIOL 141', 'BIOL 142', 'MATH 151', 'MATH 152', 'CMSC 201', 'CMSC 202', 'CMSC 203', 'CMPE 212', 'PHYS 220', 'MATH 221', 'PHYS 224', 'PHYS 225', 'MATH 225', 'MATH 251', 'CMPE 306', 'CMPE 310', 'CMPE 311', 'CMPE 314', 'CMSC 341', 'CMPE 349', 'CMSC 411', 'CMSC 421', 'CMPE 450', 'CMPE 451'}, 
                               'CMPE Technical Electives (A)' : {'CMPE 315', 'CMPE 321', 'CMPE 323', 'CMPE 330', 'CMPE 415', 'CMPE 419', 'CMPE 422', 'CMPE 423', 'CMSC 426', 'CMPE 447', 'CMSC 478', 'CMSC 479', 'CMSC 481', 'CMPE 491'},
                               'CMPE Technical Electives (B)' : {'CMSC 345', 'ENME 403', 'CMSC 422', 'CMSC 425', 'CMSC 426', 'CMSC 431', 'CMSC 435', 'CMSC 441', 'CMSC 442', 'CMSC 443', 'CMSC 455', 'CMSC 483', 'CMSC 486'}},
@@ -25,4 +27,73 @@ def get_requirements(major):
 
 @api.route('/api/getRecommendations', methods=['POST'])
 def get_recommendations(completed_courses):
-    return
+    df = pd.read_csv('class_data.csv')
+    recs = []
+
+    #loop to check the prerequisites of each class in the data against the completed classes
+    for i in range(len(df)):
+        valid = False
+        
+        #if prerequisites != 'nan' and the course has not already been taken
+        if type(df['Pre/Co requisite'][i]) != float and (df['Course Subject'][i] + ' ' + df['Course Number'][i] not in COMPLETED_COURSES):
+            
+            prereqs = df['Pre/Co requisite'][i].split()
+            reqStack =  []
+            reqs = []
+            
+            #parses prereqs
+            while len(prereqs) > 0:
+                reqStack.append(prereqs.pop(0))
+                if reqStack[-1] in COURSE_TYPES:
+                    if prereqs[0] in COURSE_NUMS:
+                        reqStack[-1] += ' ' + prereqs.pop(0)   
+                    else:
+                        reqStack.pop()       
+                else:
+                    reqStack.pop()
+                if len(reqStack) >= 1:
+                    if len(prereqs) > 0 and prereqs[0] == 'and':
+                        reqs.append(reqStack[0:])
+                        reqStack = []
+                    if len(prereqs) > 0 and prereqs[0] == 'or':
+                        prereqs.pop(0)
+                        if len(prereqs) > 1:
+                            if prereqs[0] in COURSE_TYPES and prereqs[1] in COURSE_NUMS:
+                                reqStack.append(prereqs.pop(0))
+                                reqStack.append(prereqs.pop(0))
+                        orRequirement = ''
+                        for j in range(len(reqStack)):
+                            orRequirement += reqStack[j] + ' '
+                        reqs.append(orRequirement)
+                        reqStack = []
+
+            #checks to see whether the prerequisites are met    
+            valid = True
+            for req in reqs:
+                if req not in COMPLETED_COURSES:
+                    valid = False
+                    #checks in the case that the course is a string of multiple courses where only one has to have been taken
+                    for course in COMPLETED_COURSES:
+                        if course in req:
+                            valid = True
+        else:
+            #if the course has already been completed it will not be reccomended, otherwise the course has no prereqs poor requires department consent
+            if df['Course Subject'][i] + ' ' + df['Course Number'][i] not in COMPLETED_COURSES:
+                valid = True
+        if valid:
+            recs.append(df['Course Subject'][i] + " " + df['Course Number'][i])
+
+        final_recs = []
+        for i in range(len(recs)):
+            valid = True
+            for course in COMPLETED_COURSES:
+                if course in recs[i]:
+                    valid = False
+            if valid:
+                final_recs.append(recs[i])
+
+        if 'CMSC 201' in COMPLETED_COURSES:
+            final_recs.remove('CMSC 100H')
+            final_recs.remove('CMSC 104')
+            final_recs.remove('CMSC 104Y')
+            final_recs.remove('CMSC 121')
