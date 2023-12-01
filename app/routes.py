@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+import json
 import pandas as pd
 
 COURSE_TYPES = ['CMSC', 'CMPE', 'ENGL', 'IS', 'MATH', 'STAT']
@@ -23,7 +24,7 @@ def get_requirements(major):
                     'STAT' : {'Required Core Classes' : {'MATH 151', 'MATH 152', 'MATH 221', 'MATH 251', 'STAT 350', 'STAT 351', 'STAT 355', 'ENGL 393' 'STAT 433', 'STAT 451', 'STAT 453', 'STAT 454'},
                               'MATH/STAT Upper Level Electives' : {'CMSC 201', 'CMSC 202', 'MATH 301', 'POLI 301', 'MATH 302', 'PSYC 311', 'PSYC 312', 'CMSC 331', 'CMSC 341', 'MATH 341', 'MATH 355', 'STAT 365', 'MATH 381', 'MATH 385', 'STAT 405', 'IS 410', 'STAT 414', 'STAT 417', 'STAT 418', 'STAT 419', 'SOCY 419', 'IS 420', 'ECON 421', 'ECON 422', 'ECON 423' 'MATH 426', 'IS 427', 'MATH 430', 'STAT 432', 'MATH 441', 'MATH 452', 'STAT 455', 'STAT 470', 'STAT 490', 'STAT 496', 'STAT 499'}}
                     }
-    return jsonify(requirements[major])
+    return json.dumps(requirements[major])
 
 @api.route('/api/getRecommendations', methods=['POST'])
 def get_recommendations(COMPLETED_COURSES):
@@ -97,3 +98,9 @@ def get_recommendations(COMPLETED_COURSES):
             final_recs.remove('CMSC 104')
             final_recs.remove('CMSC 104Y')
             final_recs.remove('CMSC 121')
+
+        final_recs_json = {}
+        for i in range(len(df)):
+            if df['Course Subject'][i] + ' ' + df['Course Number'] in final_recs:
+                final_recs_json[df['Course Subject'][i] + ' ' + df['Course Number'][i]] = {'title': df['Course Name'][i], 'description':df['Description'][i], 'prerequisites':df['Pre/Co requisites'][i]}
+        return json.dumps(final_recs_json)
