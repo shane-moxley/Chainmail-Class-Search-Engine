@@ -1,43 +1,43 @@
 import React, { useState, useEffect } from 'react';
 import { Grid, Container, ScrollArea, Checkbox, Button, Card, Box,  } from '@mantine/core';
 import { useNavigate, useLocation } from 'react-router-dom';
-import axios from 'axios';
+
 
 const Select = () => {
   const navigate = useNavigate();
-  // const location = useLocation();
-  // const queryParams = new URLSearchParams(location.search);
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
 
-  // const [selectedCourses, setSelectedCourses] = useState<string[]>([]);
-  // const [coursesData, setCoursesData] = useState<any>(null); // Initialize as null
+  const [selectedCourses, setSelectedCourses] = useState<string[]>([]);
+  const [coursesData, setCoursesData] = useState<any>(null); // Initialize as null
 
-  // useEffect(() => {
-  //   // Extract the "Major" and "Year" parameters from the URL
-  //   const major = queryParams.get('Major');
-  //   const year = queryParams.get('Year');
+  useEffect(() => {
+    const fetchData = async () => {
+      const major = queryParams.get('Major');
+      const year = queryParams.get('Year');
 
-  //   if (major && year) {
-  //     // Make an API call to get courses based on the Major and Year
-  //     axios
-  //       .get('/getCourseList', {
-  //         params: {
-  //           Major: major,
-  //           Year: year,
-  //         },
-  //       })
-  //       .then((response) => {
-  //         // Handle the API response here
-  //         const courses = response.data; // Assuming the API returns the data as described
-  //         setCoursesData(courses);
-  //       })
-  //       .catch((error) => {
-  //         // Handle API call errors here
-  //         console.error('API call failed:', error);
-  //         console.error('Response status:', error.response.status);
+      if (major && year) {
+        try {
+          const response = await fetch(`http://127.0.0.1:5000/api/getRequirements?Major=${encodeURIComponent(major)}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ "Major": major}),
+          });
+          const data = await response.json();
+          setCoursesData(data);
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      }
+    };
 
-  //       });
-  //   }
-  // }, [queryParams]);
+    fetchData();
+  }, []);
+  
+  
+  
 
 
   const routeChange = () => {
@@ -57,18 +57,17 @@ const Select = () => {
     //     // Handle API call errors here
     //     console.error('Failed to send student data:', error);
     //   });
-    // navigate to the next page 
     let path = `/search`; 
     navigate(path);
   };
 
-  // const handleCheckboxChange = (course: string, checked: boolean) => {
-  //   if (checked) {
-  //     setSelectedCourses((prevCourses) => [...prevCourses, course]);
-  //   } else {
-  //     setSelectedCourses((prevCourses) => prevCourses.filter((c) => c !== course));
-  //   }
-  // };
+  const handleCheckboxChange = (course: string, checked: boolean) => {
+    if (checked) {
+      setSelectedCourses((prevCourses) => [...prevCourses, course]);
+    } else {
+      setSelectedCourses((prevCourses) => prevCourses.filter((c) => c !== course));
+    }
+  };
 
   return (
     <Container className='flex flex-col gap-y-6 justify-center'>
@@ -76,7 +75,7 @@ const Select = () => {
       <Container className='flex flex-col md:flex-row md:gap-x-4 space-y-4 items-center'>
 
         {/* uncomment when APIs are implemented */}
-        {/* {coursesData &&
+        {coursesData &&
           Object.keys(coursesData).map((category) => (
             <Card key={category} w={250} h={600}>
               <h4>{category}</h4>
@@ -92,10 +91,10 @@ const Select = () => {
                 ))}
               </Box>
             </Card>
-          ))} */}
+          ))}
      
           
-          <Card  w={250} h={600} mt={16}>
+          {/* <Card  w={250} h={600} mt={16}>
               <h4>Select Math Classes:</h4>
               <Box className='space-y-4'>
                 <Checkbox className="hover:bg-sky-700" value="150" label="MATH151 (Calc I)" />
@@ -144,7 +143,7 @@ const Select = () => {
                 <Checkbox value="355" label="STAT355 (Statistics)" />
               </Box>
 
-          </Card>
+          </Card> */}
 
       </Container>
       <Button fullWidth onClick={routeChange} className='absolute inset-x-0 bottom-0'>Next</Button>
