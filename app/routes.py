@@ -1,6 +1,8 @@
 from flask import Blueprint, request, jsonify
 import json
 import pandas as pd
+import ast
+
 
 COURSE_TYPES = ['CMSC', 'CMPE', 'ENGL', 'IS', 'MATH', 'STAT']
 COURSE_NUMS = ['150', '151', '152', '155', '201', '201H', '151H', '152H', '140', '100', '202', '202H', '210', '203', '212', '310', '341', '313', '331', '221', '341H', '435', '142', '421', '481', '345', '447', '471']
@@ -43,8 +45,11 @@ def get_requirements():
     return response, 200
 
 @api.route('/api/getRecommendations', methods=['POST'])
-def get_recommendations(COMPLETED_COURSES):
-    df = pd.read_csv('class_data.csv')
+def get_recommendations():
+    data = request.get_json()
+    COMPLETED_COURSES = set(ast.literal_evaldata(data['COMPLETED_COURSES']))
+    
+    df = pd.read_csv('app/class_data.csv')
     recs = []
 
     #loop to check the prerequisites of each class in the data against the completed classes
@@ -117,6 +122,7 @@ def get_recommendations(COMPLETED_COURSES):
 
         final_recs_json = {}
         for i in range(len(df)):
-            if df['Course Subject'][i] + ' ' + df['Course Number'] in final_recs:
+            if df['Course Subject'][i] + ' ' + df['Course Number'][i] in final_recs:
                 final_recs_json[df['Course Subject'][i] + ' ' + df['Course Number'][i]] = {'title': df['Course Name'][i], 'description':df['Description'][i], 'prerequisites':df['Pre/Co requisites'][i]}
-        return json.dumps(final_recs_json)
+    
+    return json.dumps(final_recs_json), 200
