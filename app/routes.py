@@ -3,6 +3,7 @@ from flask import Blueprint, request, jsonify
 import json
 import ast
 
+
 #imports the functions to be used in the api calls
 import myfunctions
 
@@ -46,3 +47,78 @@ def get_requirements():
 def get_recommendations(completed_courses, major):
     recs = myfunctions.get_recs(completed_courses, major)
     return jsonify(recs)
+
+"""
+@api.route('/api/getRecommendations', methods=['POST'])
+def get_recommendations(COMPLETED_COURSES):
+    df = pd.read_csv('class_data.csv')
+    recs = []
+
+    #loop to check the prerequisites of each class in the data against the completed classes
+    for i in range(len(df)):
+        valid = False
+        
+        #if prerequisites != 'nan' and the course has not already been taken
+        if type(df['Pre/Co requisite'][i]) != float and (df['Course Subject'][i] + ' ' + df['Course Number'][i] not in COMPLETED_COURSES):
+            
+            prereqs = df['Pre/Co requisite'][i].split()
+            reqStack =  []
+            reqs = []
+            
+            #parses prereqs
+            while len(prereqs) > 0:
+                reqStack.append(prereqs.pop(0))
+                if reqStack[-1] in COURSE_TYPES:
+                    if prereqs[0] in COURSE_NUMS:
+                        reqStack[-1] += ' ' + prereqs.pop(0)   
+                    else:
+                        reqStack.pop()       
+                else:
+                    reqStack.pop()
+                if len(reqStack) >= 1:
+                    if len(prereqs) > 0 and prereqs[0] == 'and':
+                        reqs.append(reqStack[0:])
+                        reqStack = []
+                    if len(prereqs) > 0 and prereqs[0] == 'or':
+                        prereqs.pop(0)
+                        if len(prereqs) > 1:
+                            if prereqs[0] in COURSE_TYPES and prereqs[1] in COURSE_NUMS:
+                                reqStack.append(prereqs.pop(0))
+                                reqStack.append(prereqs.pop(0))
+                        orRequirement = ''
+                        for j in range(len(reqStack)):
+                            orRequirement += reqStack[j] + ' '
+                        reqs.append(orRequirement)
+                        reqStack = []
+
+            #checks to see whether the prerequisites are met    
+            valid = True
+            for req in reqs:
+                if req not in COMPLETED_COURSES:
+                    valid = False
+                    #checks in the case that the course is a string of multiple courses where only one has to have been taken
+                    for course in COMPLETED_COURSES:
+                        if course in req:
+                            valid = True
+        else:
+            #if the course has already been completed it will not be reccomended, otherwise the course has no prereqs poor requires department consent
+            if df['Course Subject'][i] + ' ' + df['Course Number'][i] not in COMPLETED_COURSES:
+                valid = True
+        if valid:
+            recs.append(df['Course Subject'][i] + " " + df['Course Number'][i])
+
+        final_recs = []
+        for i in range(len(recs)):
+            valid = True
+            for course in COMPLETED_COURSES:
+                if course in recs[i]:
+                    valid = False
+            if valid:
+                final_recs.append(recs[i])
+
+        if 'CMSC 201' in COMPLETED_COURSES:
+            final_recs.remove('CMSC 100H')
+            final_recs.remove('CMSC 104')
+            final_recs.remove('CMSC 104Y')
+            final_recs.remove('CMSC 121')
+"""
