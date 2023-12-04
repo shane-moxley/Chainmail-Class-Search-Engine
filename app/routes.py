@@ -1,7 +1,6 @@
 #imports dependencies
 from flask import Blueprint, request, jsonify
 import json
-import pandas as pd
 import ast
 
 #imports the functions to be used in the api calls
