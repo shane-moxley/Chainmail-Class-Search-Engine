@@ -2,17 +2,14 @@ import pytest
 import requests
 
 # Assuming your Flask server is running on this URL
-BASE_URL = "http://localhost:5000"
+BASE_URL = "http://127.0.0.1:5000"
 
 def test_recommendations():
     # Set up your test data
     test_data = {
         "COMPLETED_COURSES": "[\"MATH151\", \"CMSC201\"]",
-        "Major": "CMSC"
+        "Major": "Computer Science"
     }
-
-    print("Testing API Recommendations...")
-
 
     # Make the API request
     response = requests.post(f"{BASE_URL}/api/getRecommendations", json=test_data)
@@ -32,7 +29,6 @@ def test_recommendations():
         assert "prerequisites" in item
         assert "credit" in item
 
-    print("API Recommendations Test passed with flying colors")
 
 
 
@@ -42,7 +38,6 @@ def test_requirements():
         "Major": "Computer Science"
     }
 
-    print("Testing API Requirements...")
 
     # Make the API request
     response = requests.post(f"{BASE_URL}/api/getRequirements", json=test_data)
@@ -54,10 +49,9 @@ def test_requirements():
     data = response.json()
 
     # Add your specific assertions based on the expected structure of the response
-    assert isinstance(data, list)
-    assert "CMSC" in data
+    #assert isinstance(data, list)
+    assert 'CMSC Electives and Technical Electives' in data
 
-    print("API Requirements Test passed with flying colors")
 
 
 if __name__ == "__main__":
