@@ -1,4 +1,7 @@
 import pandas as pd
+import os
+
+print("Current working directory:", os.getcwd())
 
 MAJOR_REQUIREMENTS = {'CMPE' : ['ENGL 100', 'ENES 101', 'CHEM 101', 'PHYS 121', 'PHYS 122', 'BIOL 141', 'BIOL 142', 'MATH 151', 'MATH 152', 'CMSC 201', 'CMSC 202', 'CMSC 203', 'CMPE 212', 'PHYS 220', 'MATH 221', 'PHYS 224', 'PHYS 225', 'MATH 225', 'MATH 251', 'CMPE 306', 'CMPE 310', 'CMPE 311', 'CMPE 314', 'CMSC 341', 'CMPE 349', 'CMSC 411', 'CMSC 421', 'CMPE 450', 'CMPE 451', 
                                 'CMPE 315', 'CMPE 321', 'CMPE 323', 'CMPE 330', 'CMPE 415', 'CMPE 419', 'CMPE 422', 'CMPE 423', 'CMSC 426', 'CMPE 447', 'CMSC 478', 'CMSC 479', 'CMSC 481', 'CMPE 491',
@@ -29,7 +32,7 @@ def get_recs(COMPLETED_COURSES, MAJOR):
   param major: major that the user has selected
   return: recommendations as a json string of the form {'ECAC 121' : {'title' : 'abc', 'credit' : 4, 'bcd' : 'xyz', 'prerequisites' : 'cde'},.., 'WOL 201' : {...}}
   """
-  df = pd.read_csv('full_class_data.csv ')
+  df = pd.read_csv('app/full_class_data.csv')
   recs = {}
 
   #loop to check the prerequisites of each class in the data against the completed classes
@@ -84,3 +87,4 @@ def get_recs(COMPLETED_COURSES, MAJOR):
         valid = True
     if valid:
       recs[df['course'][i]] = {'title' : df['name'][i], 'credit' : df['credit_num'][i], 'description' : df['description'][i], 'prerequisites' : df['prerequisites'][i]}
+  return recs

@@ -2,10 +2,13 @@
 from flask import Blueprint, request, jsonify
 import json
 import ast
+import numpy as np
+import pandas as pd
 
 
 #imports the functions to be used in the api calls
-import myfunctions
+from . import myfunctions
+
 
 api = Blueprint('api', __name__)
 
@@ -44,9 +47,18 @@ def get_requirements():
     return response, 200
 
 @api.route('/api/getRecommendations', methods=['POST'])
-def get_recommendations(completed_courses, major):
-    recs = myfunctions.get_recs(completed_courses, major)
-    return jsonify(recs)
+def get_recommendations():
+    data = request.json
+    recs = myfunctions.get_recs(json.loads(data["COMPLETED_COURSES"]), "CMSC")
+
+    # Replace NaN values with None
+    recs_cleaned = {key: {k: v if pd.notna(v) else None for k, v in value.items()} for key, value in recs.items()}
+    
+    # Convert int64 types to standard Python integers
+    recs_serial = [{'course_code': key, **value, 'credit': int(value.get('credit', 0))} for key, value in recs_cleaned.items()]
+    
+    return recs_serial
+
 
 """
 @api.route('/api/getRecommendations', methods=['POST'])
