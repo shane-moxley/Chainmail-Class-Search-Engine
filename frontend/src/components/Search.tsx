@@ -64,9 +64,10 @@ const Search = () => {
 
           <ScrollArea className='p-10 gap-y-4'>
 
+          <Container className='space-y-7'>
           {recommendations.map((recommendation: any, index: number) => (
             
-              <Card key={index} className='p-20 hover:bg-sky-700'>
+              <Card key={index} className='transform bg-indigo-100 transition duration-500 hover:bg-indigo-900'>
                 <h4>{recommendation.course_code}: {recommendation.title}</h4>
                 <Box className='space-y-4'>
                   <ScrollArea>
@@ -76,6 +77,7 @@ const Search = () => {
                 </Box>
               </Card>
             ))}
+          </Container>
 
           </ScrollArea>
           <Button fullWidth /*onClick={routeChange}*/ className='absolute inset-x-0 bottom-0'>Next</Button>
