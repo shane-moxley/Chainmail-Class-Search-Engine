@@ -91,13 +91,14 @@ def get_recs(COMPLETED_COURSES, MAJOR):
 
       #checks to see whether the prerequisites are met
       valid = True
-      for req in reqs:
-        if req not in COMPLETED_COURSES:
+      it = 0
+      while valid and it < len(reqs):
+        if reqs[it] not in COMPLETED_COURSES:
           valid = False
-          #checks in the case that the course is a string of multiple courses where only one has to have been taken
           for course in COMPLETED_COURSES:
-            if course in req:
+            if course in reqs[it]:
               valid = True
+          it += 1
     else:
       #if the course has already been completed it will not be reccomended, otherwise the course has no prereqs poor requires department consent
       if df['course'][i] not in COMPLETED_COURSES and df['course'][i] in MAJOR_REQUIREMENTS[MAJOR]:
