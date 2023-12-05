@@ -6,7 +6,7 @@ const Search = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const selectedCoursesParam = queryParams.get('selectedCourses');
-
+  const major = queryParams.get('Major');  
   const [recommendations, setRecommendations] = useState<any[]>([]);
 
   useEffect(() => {
@@ -17,7 +17,7 @@ const Search = () => {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ "COMPLETED_COURSES": selectedCoursesParam }),
+          body: JSON.stringify({ "COMPLETED_COURSES": selectedCoursesParam, "Major": major }),
         });
         console.log("Going to get a response...");  
         const data = await response.json();

@@ -8,14 +8,14 @@ const Select = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
 
+  const major = queryParams.get('Major');
+  const year = queryParams.get('Year');
+
   const [selectedCourses, setSelectedCourses] = useState<string[]>([]);
   const [coursesData, setCoursesData] = useState<any>(null); // Initialize as null
 
   useEffect(() => {
     const fetchData = async () => {
-      const major = queryParams.get('Major');
-      const year = queryParams.get('Year');
-
       if (major && year) {
         try {
           const response = await fetch(`http://127.0.0.1:5000/api/getRequirements`, {
@@ -42,7 +42,7 @@ const Select = () => {
 
   const routeChange = () => {
     // Use the navigate function to go to the next page and pass selectedCourses as a query parameter
-    let path = `/search?selectedCourses=${encodeURIComponent(JSON.stringify(selectedCourses))}`;
+    let path = `/search?selectedCourses=${encodeURIComponent(JSON.stringify(selectedCourses))}&Major=${major}`;
     navigate(path);
   };
 

@@ -12,17 +12,17 @@ from . import myfunctions
 
 api = Blueprint('api', __name__)
 
-@api.route('/api/getRequirements', methods=['POST'])
-def get_requirements():
-    data = request.json
-    major = data["Major"]
-    
-    majors = {
+majors = {
         "Computer Science" : "CMSC",
         "Computer Engineering" : "CMPE",
         "Mathematics" : "MATH",
         "Statistics": "STAT",
     }
+
+@api.route('/api/getRequirements', methods=['POST'])
+def get_requirements():
+    data = request.json
+    major = data["Major"]
     major = majors[major]
     
     requirements = {'CMPE' : {'Required Core Classes' : ['ENGL 100', 'ENES 101', 'CHEM 101', 'PHYS 121', 'PHYS 122', 'BIOL 141', 'BIOL 142', 'MATH 151', 'MATH 152', 'CMSC 201', 'CMSC 202', 'CMSC 203', 'CMPE 212', 'PHYS 220', 'MATH 221', 'PHYS 224', 'PHYS 225', 'MATH 225', 'MATH 251', 'CMPE 306', 'CMPE 310', 'CMPE 311', 'CMPE 314', 'CMSC 341', 'CMPE 349', 'CMSC 411', 'CMSC 421', 'CMPE 450', 'CMPE 451'], 
@@ -49,7 +49,8 @@ def get_requirements():
 @api.route('/api/getRecommendations', methods=['POST'])
 def get_recommendations():
     data = request.json
-    recs = myfunctions.get_recs(json.loads(data["COMPLETED_COURSES"]), "CMSC")
+    major = majors[data["Major"]]
+    recs = myfunctions.get_recs(json.loads(data["COMPLETED_COURSES"]), major)
 
     # Replace NaN values with None
     recs_cleaned = {key: {k: v if pd.notna(v) else None for k, v in value.items()} for key, value in recs.items()}
