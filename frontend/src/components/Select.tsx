@@ -67,11 +67,14 @@ const Select: React.FC = () => {
   return (
     <Container className='flex flex-col gap-y-6 justify-center'>
       <h1>Let's see how far you already got...</h1>
-      <Checkbox
+      {major === 'Computer Science' ? (
+        <Checkbox
           label="I finished my Science Sequence"
           checked={selectAll}
           onChange={(event) => handleSelectAllChange(event.target.checked, "Science Classes")}
         />
+        ) : <div></div>}
+
       <Container className='flex flex-col md:flex-row md:gap-x-4 space-y-4 items-center'>
         {/* "Select All" Checkbox */}
         
