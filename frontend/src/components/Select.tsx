@@ -56,9 +56,11 @@ const Select: React.FC = () => {
 
   const handleSelectAllChange = (isChecked: boolean, category: string) => {
     setSelectAll(isChecked);
-  
-    const allCourses = Object.values(coursesData[category]).flat() as string[]; // Add the type assertion here
-    setSelectedCourses(isChecked ? allCourses : []);
+    if(major == "Computer Science") {
+      const allCourses = Object.values(coursesData[category]).flat() as string[]; // Add the type assertion here
+      setSelectedCourses(isChecked ? allCourses : []);
+    }
+    
   };
   
 
