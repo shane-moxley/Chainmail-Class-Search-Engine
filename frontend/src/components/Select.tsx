@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Container, ScrollArea, Checkbox, Button, Card } from '@mantine/core';
+import { Grid, Container, ScrollArea, Checkbox, Button, Card, Box,  } from '@mantine/core';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useProgress } from './ProgressContent';
 
-const Select: React.FC = () => {
+
+const Select = () => {
+
   const { progress, setProgress } = useProgress();
   const navigate = useNavigate();
   const location = useLocation();
@@ -13,11 +15,7 @@ const Select: React.FC = () => {
   const year = queryParams.get('Year');
 
   const [selectedCourses, setSelectedCourses] = useState<string[]>([]);
-  const [selectAll1, setSelectAll1] = useState(false);
-  const [selectAll2, setSelectAll2] = useState(false);
-  const [selectAll3, setSelectAll3] = useState(false);
-  const [selectAll4, setSelectAll4] = useState(false);
-  const [coursesData, setCoursesData] = useState<any>(null);
+  const [coursesData, setCoursesData] = useState<any>(null); // Initialize as null
 
   useEffect(() => {
     const fetchData = async () => {
@@ -28,7 +26,7 @@ const Select: React.FC = () => {
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ Major: major }),
+            body: JSON.stringify({ "Major": major}),
           });
           const data = await response.json();
           setCoursesData(data);
@@ -39,13 +37,16 @@ const Select: React.FC = () => {
     };
 
     fetchData();
-  }, [major, year]);
+  }, []);
+  
+  
+  
+
 
   const routeChange = () => {
+    // Use the navigate function to go to the next page and pass selectedCourses as a query parameter
     setProgress(2);
-    let path = `/search?selectedCourses=${encodeURIComponent(
-      JSON.stringify(selectedCourses)
-    )}&Major=${major}`;
+    let path = `/search?selectedCourses=${encodeURIComponent(JSON.stringify(selectedCourses))}&Major=${major}`;
     navigate(path);
   };
 
@@ -57,60 +58,18 @@ const Select: React.FC = () => {
     }
   };
 
-  const handleSelectAllChange1 = (isChecked: boolean, category: string) => {
-    setSelectAll1(isChecked);
-  
-    const allCourses = Object.values(coursesData[category]).flat() as string[]; // Add the type assertion here
-    setSelectedCourses(isChecked ? allCourses : []);
-  };
-  const handleSelectAllChange2 = (isChecked: boolean, category: string) => {
-    setSelectAll2(isChecked);
-  
-    const allCourses = Object.values(coursesData[category]).flat() as string[]; // Add the type assertion here
-    setSelectedCourses(isChecked ? allCourses : []);
-  };
-  const handleSelectAllChange3 = (isChecked: boolean, category: string) => {
-    setSelectAll3(isChecked);
-  
-    const allCourses = Object.values(coursesData[category]).flat() as string[]; // Add the type assertion here
-    setSelectedCourses(isChecked ? allCourses : []);
-  };
-  const handleSelectAllChange4 = (isChecked: boolean, category: string) => {
-    setSelectAll4(isChecked);
-  
-    const allCourses = Object.values(coursesData[category]).flat() as string[]; // Add the type assertion here
-    setSelectedCourses(isChecked ? allCourses : []);
-  };
-  
-
   return (
     <Container className='flex flex-col gap-y-6 justify-center'>
       <h1>Let's see how far you already got...</h1>
       <Container className='flex flex-col md:flex-row md:gap-x-4 space-y-4 items-center'>
-        {/* "Select All" Checkbox */}
-        
 
+        
         {coursesData &&
           Object.keys(coursesData).map((category) => (
             <Card key={category} w={250} h={600}>
               <h4>{category}</h4>
-
-
-              
               <ScrollArea className='space-y-4'>
-                
-                
-              
-              {coursesData[category].map((course: string) => (
-                <React.Fragment key={course}>
-                  {category === "Science Classes" && (
-                    <Checkbox
-                      label="Select All"
-                      checked={selectAll4}
-                      onChange={(event) => handleSelectAllChange4(event.target.checked, category)}
-                    />
-                  )}
-
+                {coursesData[category].map((course: string) => (
                   <Checkbox
                     className='transform transition duration-100 hover:bg-blue-500'
                     key={course}
@@ -119,17 +78,15 @@ const Select: React.FC = () => {
                     checked={selectedCourses.includes(course)}
                     onChange={(event) => handleCheckboxChange(course, event.target.checked)}
                   />
-                </React.Fragment>
-              ))}
-
+                ))}
               </ScrollArea>
             </Card>
           ))}
+
       </Container>
-      <Button fullWidth onClick={routeChange} className='absolute inset-x-0 bottom-0'>
-        Next
-      </Button>
+      <Button fullWidth onClick={routeChange} className='absolute inset-x-0 bottom-0'>Next</Button>
     </Container>
+
   );
 };
 
