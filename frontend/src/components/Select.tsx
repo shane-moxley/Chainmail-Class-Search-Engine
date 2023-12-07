@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Grid, Container, ScrollArea, Checkbox, Button, Card, Box,  } from '@mantine/core';
+import { Container, ScrollArea, Checkbox, Button, Card } from '@mantine/core';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useProgress } from './ProgressContent';
 
-
-const Select = () => {
-
+const Select: React.FC = () => {
   const { progress, setProgress } = useProgress();
   const navigate = useNavigate();
   const location = useLocation();
@@ -15,7 +13,8 @@ const Select = () => {
   const year = queryParams.get('Year');
 
   const [selectedCourses, setSelectedCourses] = useState<string[]>([]);
-  const [coursesData, setCoursesData] = useState<any>(null); // Initialize as null
+  const [selectAll, setSelectAll] = useState(false);
+  const [coursesData, setCoursesData] = useState<any>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -26,7 +25,7 @@ const Select = () => {
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ "Major": major}),
+            body: JSON.stringify({ Major: major }),
           });
           const data = await response.json();
           setCoursesData(data);
@@ -37,16 +36,13 @@ const Select = () => {
     };
 
     fetchData();
-  }, []);
-  
-  
-  
-
+  }, [major, year]);
 
   const routeChange = () => {
-    // Use the navigate function to go to the next page and pass selectedCourses as a query parameter
     setProgress(2);
-    let path = `/search?selectedCourses=${encodeURIComponent(JSON.stringify(selectedCourses))}&Major=${major}`;
+    let path = `/search?selectedCourses=${encodeURIComponent(
+      JSON.stringify(selectedCourses)
+    )}&Major=${major}`;
     navigate(path);
   };
 
@@ -58,12 +54,26 @@ const Select = () => {
     }
   };
 
+  const handleSelectAllChange = (isChecked: boolean, category: string) => {
+    setSelectAll(isChecked);
+  
+    const allCourses = Object.values(coursesData[category]).flat() as string[]; // Add the type assertion here
+    setSelectedCourses(isChecked ? allCourses : []);
+  };
+  
+
   return (
     <Container className='flex flex-col gap-y-6 justify-center'>
       <h1>Let's see how far you already got...</h1>
+      <Checkbox
+          label="I finished my Science Sequence"
+          checked={selectAll}
+          onChange={(event) => handleSelectAllChange(event.target.checked, "Science Classes")}
+        />
       <Container className='flex flex-col md:flex-row md:gap-x-4 space-y-4 items-center'>
-
+        {/* "Select All" Checkbox */}
         
+
         {coursesData &&
           Object.keys(coursesData).map((category) => (
             <Card key={category} w={250} h={600}>
@@ -82,11 +92,11 @@ const Select = () => {
               </ScrollArea>
             </Card>
           ))}
-
       </Container>
-      <Button fullWidth onClick={routeChange} className='absolute inset-x-0 bottom-0'>Next</Button>
+      <Button fullWidth onClick={routeChange} className='absolute inset-x-0 bottom-0'>
+        Next
+      </Button>
     </Container>
-
   );
 };
 
