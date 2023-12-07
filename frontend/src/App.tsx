@@ -6,6 +6,7 @@ import Search from './components/Search';
 import Layout from './components/Layout';
 import Sidebar from './components/Sidebar';
 import Navigation from './components/Navigation';
+import { ProgressProvider } from './components/ProgressContent';
 
 import '@mantine/core/styles.css';
 import { MantineProvider, createTheme} from '@mantine/core';
@@ -14,19 +15,6 @@ import { MantineProvider, createTheme} from '@mantine/core';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 
 
-// Might use this later for navigation (Put it inside <Router>)
-/*
-<nav>
-  <ul>
-    <li>
-      <Link to="/">Welcome</Link>
-    </li>
-    <li>
-      <Link to="select">Select</Link>
-    </li>
-  </ul>
-</nav>
-*/
 
 const theme = createTheme({
   /** Your theme override here */
@@ -36,11 +24,12 @@ function App() {
 
   return (
     <MantineProvider defaultColorScheme="dark" theme={theme}>
+      <ProgressProvider>
       <Router>
         <Layout>
 
-          <div className='bg-indigo-500 md:grow content-center'>
-            <Sidebar/>
+          <div className='bg-yellow-800 md:grow'>
+            <Navigation></Navigation>
           </div>
 
           <div className='flex grow md:w-3/5'>
@@ -57,6 +46,7 @@ function App() {
 
         </Layout>
       </Router>
+      </ProgressProvider>
     </MantineProvider>
   );
 }

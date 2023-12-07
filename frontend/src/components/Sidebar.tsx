@@ -10,12 +10,9 @@ const Sidebar: React.FC = () => {
   };
 
   return (
-    <Container>
-      {!isSidebarOpen ? (
-        <Navigation></Navigation>
-      ) : (
-        <Button onClick={toggleSidebar}>Butooooon☰</Button>
-      )}
+    <Container className='bg-yellow-500 space-y-8 grow flex flex-col place-content-end'>
+      <Navigation></Navigation>
+      <Navigation></Navigation>
     </Container>
   );
 };

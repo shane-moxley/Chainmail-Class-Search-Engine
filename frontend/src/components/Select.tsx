@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Grid, Container, ScrollArea, Checkbox, Button, Card, Box,  } from '@mantine/core';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useProgress } from './ProgressContent';
 
 
 const Select = () => {
+
+  const { progress, setProgress } = useProgress();
   const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -42,6 +45,7 @@ const Select = () => {
 
   const routeChange = () => {
     // Use the navigate function to go to the next page and pass selectedCourses as a query parameter
+    setProgress(2);
     let path = `/search?selectedCourses=${encodeURIComponent(JSON.stringify(selectedCourses))}&Major=${major}`;
     navigate(path);
   };

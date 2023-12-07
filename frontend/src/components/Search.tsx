@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Grid, Container, ScrollArea, Checkbox, Button, Card, Box,  } from '@mantine/core';
+import { useProgress } from './ProgressContent';
 
 const Search = () => {
+
+  const { progress, setProgress } = useProgress();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const selectedCoursesParam = queryParams.get('selectedCourses');
@@ -80,7 +83,7 @@ const Search = () => {
           </Container>
 
           </ScrollArea>
-          <Button fullWidth /*onClick={routeChange}*/ className='absolute inset-x-0 bottom-0'>Next</Button>
+
       </Container>
       
     
