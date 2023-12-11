@@ -497,3 +497,4 @@ VALUES
 (
     'CMSC','499','Independent Study in Computer Science (1-4)','A student may enroll in this course to study computer science topics that are not available in a regular course. The student and the faculty member supervising the independent study must determine the objectives of the project, the number of credits to be earned and the evaluation criteria for the project. Students are limited to two independent study courses in computer science.  This course is repeatable for credit. Students may complete a maximum of 4 credits.','Pass/Fail',52981,'Department Consent Required','Independent Study',NULL,NULL,'Completion of 60 credits.',NULL,NULL
 );
+
